@@ -1,0 +1,253 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Masters/Doctoral Thesis 
+% LaTeX Template
+% Version 2.5 (27/8/17)
+%
+% This template was downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Version 2.x major modifications by:
+% Vel (vel@latextemplates.com)
+%
+% This template is based on a template by:
+% Steve Gunn (http://users.ecs.soton.ac.uk/srg/softwaretools/document/templates/)
+% Sunil Patel (http://www.sunilpatel.co.uk/thesis-template/)
+%
+% Template license:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[
+12pt, % The default document font size, options: 10pt, 11pt, 12pt
+%oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side a activer si on veut qu'il n'y ait pas de décalage de la marge une page sur deux et que la pagination soit une fois à droite et une fois à gauche (c'est le cas où l'on imprime recto-verso).
+french, % ngerman for German
+singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+%draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
+%nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
+%liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
+%toctotoc, % Uncomment to add the main table of contents to the table of contents
+%parskip, % Uncomment to add space between paragraphs
+%nohyperref, % Uncomment to not load the hyperref package
+headsepline, % Uncomment to get a line under the header
+%chapterinoneline, % Uncomment to place the chapter title next to the number on one line
+%consistentlayout, % Uncomment to change the layout of the declaration, abstract and acknowledgements pages to match the default layout
+]{MastersDoctoralThesis} % The class file specifying the document structure
+
+% \usepackage[frenchb]{babel}
+\usepackage[utf8]{inputenc} % Required for inputting international characters
+\usepackage[T1]{fontenc} % Output font encoding for international characters
+\usepackage{mathpazo} % Use the Palatino font by default
+\usepackage[
+backend=bibtex]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
+
+\addbibresource{bibliography/bibliography.bib} % The filename of the bibliography
+
+\usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	MARGIN SETTINGS
+%----------------------------------------------------------------------------------------
+
+\geometry{
+	paper=a4paper, % Chrvisange to letterpaper for US letter
+	inner=2.5cm, % Inner margin
+	outer=3.8cm, % Outer margin
+	bindingoffset=.5cm, % Binding offset
+	top=1.5cm, % Top margin
+	bottom=1.5cm, % Bottom margin
+	%showframe, % Uncomment to show how the type block is set on the page
+}
+
+%----------------------------------------------------------------------------------------
+%	THESIS INFORMATION
+%----------------------------------------------------------------------------------------
+\thesistitle{Stratégies de recherche et application au test logiciel} % Your thesis title, this is used in the title and abstract, print it elsewhere with \ttitle
+\supervisor{MCF. Emmanuel \textsc{Hyon}} % Your supervisor's name, this is used in the title page, print it elsewhere with \supname
+\examiner{} % Your examiner's name, this is not currently used anywhere in the template, print it elsewhere with \examname
+\author{Valentin \textsc{Bouquet}} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
+\addresses{valentin-bouquet@hotmail.fr} % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
+
+\keywords{heuristiques, exploration de chemin, test logiciel, exécution symbolique} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
+\university{\href{http://www.parisnanterre.fr/}{Université Paris Nanterre}} % Your university's name and URL, this is used in the title page and abstract, print it elsewhere with \univname
+\department{\href{https://www.parisnanterre.fr/organisation/departement-de-mathematiques-et-informatique-343280.kjsp}{Département de mathématiques et informatique}} % Your department's name and URL, this is used in the title page and abstract, print it elsewhere with \deptname
+
+\AtBeginDocument{
+\hypersetup{pdftitle=\ttitle} % Set the PDF's title to your title
+\hypersetup{pdfauthor=\authorname} % Set the PDF's author to your name
+\hypersetup{pdfkeywords=\keywordnames} % Set the PDF's keywords to your keywords
+}
+
+\begin{document}
+% \let\cleardoublepage\clearpage % A activer pour supprimer les pages blanches entre chapitres, table des matières, remerciements, etc.
+
+\frontmatter % Use roman page numbering style (i, ii, iii, iv...) for the pre-content pages
+
+\pagestyle{plain} % Default to the plain heading style until the thesis style is called for the body content
+
+%----------------------------------------------------------------------------------------
+%	TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\begin{titlepage}
+\begin{center}
+
+\vspace*{.06\textheight}
+{\scshape\LARGE \univname \par}\vspace{1.5cm} % University name
+\textsc{\Large Mémoire de fin d'études\\-\\MIAGE}\\[0.5cm] % Thesis type
+
+\HRule \\[0.4cm] % Horizontal line
+{\huge \bfseries \ttitle\par}\vspace{0.4cm} % Thesis title
+\HRule \\[1.5cm] % Horizontal line
+ 
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Auteur:}\\
+\href{http://www.github.com/vbouquet}{\authorname} % Author name - remove the \href bracket to remove the link
+\end{flushleft}
+\end{minipage}
+\begin{minipage}[t]{0.4\textwidth}
+\begin{flushright} \large
+\emph{Tuteur:} \\
+\href{https://www.lip6.fr/actualite/personnes-fiche.php?ident=P216}{\supname} % Supervisor name - remove the \href bracket to remove the link  
+\end{flushright}
+\end{minipage}\\[3cm]
+ 
+% \vfill
+
+% \vfill
+
+{\large \today}\\[4cm] % Date
+\includegraphics[scale=0.75]{figures/logo-paris-nanterre.jpg} % University/department logo - uncomment to place it
+ 
+\vfill
+\end{center}
+\end{titlepage}
+
+%----------------------------------------------------------------------------------------
+%	QUOTATION PAGE
+%----------------------------------------------------------------------------------------
+
+% \vspace*{0.2\textheight}
+
+% \noindent\enquote{\itshape }\bigbreak
+
+% \hfill Valentin Bouquet
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT PAGE
+%----------------------------------------------------------------------------------------
+
+\newenvironment{abstract}%
+{\cleardoublepage\thispagestyle{empty}\null\vfill\begin{center}%
+\bfseries\abstractname\end{center}}%
+{\vfill\null}
+
+\begin{abstract}
+
+- Importances des tests pour la qualité logiciel
+
+- Problématique: analyse et outil avec un complexité importante en temps d'exécution. Impossible de tout couvrir.
+
+- Nécessite de contourner cette problématique en application des outils sur des logiciels en utilisant des propriétés qui font réduire l'ensemble des possibles.
+
+- Possibilité d'appliquer des stratégies de recherches plus intelligentes pour détecter des erreurs ou des anomalies.\\
+
+\textbf{Mots clés:} \keywordnames
+%Le test d'application est une part importante du cycle de développement d'une application. Le coût des tests occupe entre 30\% et 50\% du développement.
+%La génération de cas de tests est une des tâches les plus laborieuses lors du test d'application.
+%Une grande partie des limitations de l'analyse logiciel vient de la complexité pour établir tous les cas.
+...
+% Facilité la maintenance de la qualité logicielle au cours des évolutions.
+
+
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	ACKNOWLEDGEMENTS
+%----------------------------------------------------------------------------------------
+\ohead*{} % Numéro de page en haut
+\ofoot*{\pagemark} % Numéro de page en bas
+\begin{acknowledgements}
+%\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
+Merci, c'était super.
+\end{acknowledgements}
+
+
+%----------------------------------------------------------------------------------------
+%	LIST OF CONTENTS/FIGURES/TABLES PAGES
+%----------------------------------------------------------------------------------------
+
+\tableofcontents % Prints the main table of contents
+
+% \listoffigures % Prints the list of figures
+
+% \listoftables % Prints the list of tables
+
+%----------------------------------------------------------------------------------------
+%	ABBREVIATIONS
+%----------------------------------------------------------------------------------------
+
+% \begin{abbreviations}{ll} % Include a list of abbreviations (a table of two columns)
+
+% \textbf{LAH} & \textbf{L}ist \textbf{A}bbreviations \textbf{H}ere\\
+% \textbf{WSF} & \textbf{W}hat (it) \textbf{S}tands \textbf{F}or\\
+
+% \end{abbreviations}
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - CHAPTERS
+%----------------------------------------------------------------------------------------
+
+\mainmatter % Begin numeric (1,2,3...) page numbering
+\pagestyle{thesis} % Return the page headers back to the "thesis" style
+
+% Include the chapters of the thesis as separate files from the Chapters folder
+% Uncomment the lines as you write the chapters
+
+\include{introduction}
+\include{chapters/chapitre1}
+\include{chapters/chapitre2}
+\include{chapters/chapitre3}
+\include{conclusion}
+
+
+%----------------------------------------------------------------------------------------
+%	THESIS CONTENT - APPENDICES
+%----------------------------------------------------------------------------------------
+
+% \appendix % Cue to tell LaTeX that the following "chapters" are Appendices
+
+% Include the appendices of the thesis as separate files from the Appendices folder
+% Uncomment the lines as you write the Appendices
+
+% \include{Appendices/AppendixA}
+% \include{Appendices/AppendixB}
+% \include{Appendices/AppendixC}
+
+%----------------------------------------------------------------------------------------
+%	BIBLIOGRAPHY
+%----------------------------------------------------------------------------------------
+
+\printbibliography[heading=bibintoc]
+
+%----------------------------------------------------------------------------------------
+
+\end{document}  

@@ -1,0 +1,67 @@
+% Chapter 1
+
+\chapter{Différentes méthodes de génération de tests} % Main chapter title
+
+\label{Chapter1} % For referencing the chapter elsewhere, use \ref{Chapter1} 
+
+%----------------------------------------------------------------------------------------
+
+% Define some commands to keep the formatting separated from the content 
+\newcommand{\keyword}[1]{\textbf{#1}}
+\newcommand{\tabhead}[1]{\textbf{#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\file}[1]{\texttt{\bfseries#1}}
+\newcommand{\option}[1]{\texttt{\itshape#1}}
+
+%----------------------------------------------------------------------------------------
+
+\section{Exécution symbolique}
+
+L'exécution symbolique est une technique d'analyse de type « boîte blanche » c'est à dire basé sur l'analyse d'un programme dont on peut voir le fonctionnement.
+A partir d'un code source d'un programme (ou depuis sa représentation binaire).
+
+%TODO Référence King 1975
+L'exécution symbolique utilise des valeurs symboliques pour les valeurs d'entrée d'un programme ainsi que pour les variables définies dans celui-ci. 
+L'exécution symbolique permet ensuite de suivre l'évolution de ses valeurs pas à pas et d'établir à tout point du programme la valeur symbolique de celles ci ainsi que les chemins, établies en fonction des conditions de branches, prises pour atteindre chacune des valeurs. 
+
+%----------------------------------------------------------------------------------------
+
+\section{Model-based testing}
+
+Model-based testing (MBT) est une approche de type « boîte noire » c'est à dire basée sur la représentation d'un programme sans considérer son fonctionnement interne. Cette approche vise à identifier les comportements de l'application ou de composants pour vérifier leur comportement en fonction des paramètres d'entrées/sorties possibles.
+\cite{shadow}
+\cite{EFSM}
+L'objectif est de trouver un ensemble de valeurs d'entrées pour suffisamment tester le comportement du programme ou d'une fonctionnalité (couverture de test) à partir, par exemple de spécification algébrique\cite{testsurvey}.
+
+%----------------------------------------------------------------------------------------
+
+\section{Combinatoire}
+
+La technique de génération de test combinatoire propose une approche systémique en fonction d'ensemble de valeurs d'entrées ou de configurations d'un programme. Par exemple, un site web pourrait être accessible depuis 3 systèmes d'exploitations (Linux, Windows, Osx) et 2 navigateurs (chrome et firefox). Nous avons 2 variables pouvant l'une prendre 3 configurations possibles et l'autre 2 ce qui est fait un total de 3 x 2 ou 6 configurations possibles.
+Cette approche met en exergue des erreurs qui pourraient subvenir lors de cas d'utilisation.
+
+L'objectif de la génération des tests combinatoires et de diminuer la taille de la suite de test, pour cela il existe plusieurs algorithmes (TCG, DDA, PICT) visant à prioriser la couverture du nombre de combinaison. 
+
+%----------------------------------------------------------------------------------------
+
+\section{Aléatoire}
+
+La génération de test de manière aléatoire est surement une des méthodes les plus évidentes et les plus faciles à mettre en place. Dans certains cas, c'est l'unique méthode envisageable si la documentation d'un programme est incomplète et que le code source n'est pas accessible. Cette technique a bien sur un coup important, l'ensemble des valeurs possibles pour les valeurs d'entrées d'un programme est souvent trop complexe. 
+Pour cela, des méthodes de génération adaptives sont utilisées. Des méthodes empiriques ont montrées que des valeurs d'entrées générant des erreurs ont tendance à former des régions contingentes d'erreurs. Il en est inversement de même pour des valeurs d'entrées ne générant aucune erreur\cite{ART}.
+Il s'agit donc de définir des stratégies de génération pour couvrir de manière efficace l'ensemble des valeurs possibles en maximisant les chances de tomber sur une valeur d'erreur pour ensuite tester les valeurs contingentes.
+
+%----------------------------------------------------------------------------------------
+
+\section{Search based software testing}
+
+%----------------------------------------------------------------------------------------
+
+\section{Propositions}
+
+Trouver une méthode pour identifier des cas de test discriminant entre deux programmes implémentant la même fonctionnalité mais de manière différente. En adaptant la méthode définie dans l'article Shadow of a Doubt\cite{shadow} pour générer des tests de non régression entre différentes versions d'un programme.
+
+Implémenter la description théorique de l'article Shadow of a doubt\cite{shadow} pour générer des tests de non régression entre différentes versions d'un programme.
+
+Définir une méthode pour adapter les différents outils dans un environnement plus "accessible" qui est l'éducation. Il est surement possible de s'astreindre de certaines contraintes de complexités.
+
+Améliorer les différents outils d'exécution symbolique en amoindrissant les contraintes des solveurs de contraintes pour les adapter à certains cas d'applications (surement trop complexe).
