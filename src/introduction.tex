@@ -1,29 +1,24 @@
 \chapter*{Introduction}
 \addchaptertocentry{Introduction}
+%TODO 
+«Tester revient à confronter par des moyens statiques (analyse de code, revue, etc.) ou par des moyens dynamiques (exécution avec des valeurs particulières) les spécifications du logiciel, c’est à dire ce qu’il doit faire et éventuellement sous quelles contraintes (temps, utilisation de la mémoire, etc.), à sa réalisation, c’est à dire de quelle façon il répond au besoin exprimé en enchainant différentes actions élémentaires.»\cite{jfpp-test}\cite{judea-pearl-heuristics}\cite{MCTS-methods-survey}\cite{MTCS-symbolic-execution-path-exploration}\cite{MTCS-program-synthesis}\cite{MTCS-symbolic-execution-less-path}\cite{testing-and-machine-learning}
 
-Ces dernières années des méthodes d'intelligence artificielles ont été appliqués dans de nombreux domaines, c'est le cas par exemple de l'ordinateur X qui a battu le joueur Y au jeu de GO grâce à un algorithme reposant sur la famille des Monte Carlo Tree Search, méthode de recherche basé sur l'apprentissage.
+La génération automatique de tests est un domaine déjà bien développé qui permet aujourd'hui grâce à différentes analyse à partir du code comme celle de l'arbre syntaxique abstrait, du graphe de flot de contrôle (CFG) et d'application de méthodes comme l'exécution symbolique, concolique ou de model-checking d'extraire des propriétés parfois abstraites du code pour identifier des valeurs de tests pertinentes pour s'assurer de la qualité du programme\cite{EFSM}  .
 
-Émergence de solutions pratiques car la recherche est disponible (30ans de recherche d'IA) et que l'aire de big data ont permis l'émergeance de cas d'applications concrets.
+Ces approches sont malheureusement limitées de par la complexité grandissante des programmes à tester qui confronte ces méthodes à l'explosion du nombre de chemins, du nombre d'états ou de contraintes possibles. Pour représenter ces états et chemins, ces méthodes repose sur des modèles d'arbres qui ne peuvent être parcourus en intégralité à cause de leur taille. Les algorithmes de parcours actuellement utilisés repose souvent sur des stratégies simples comme le parcours en profondeur qui est connu pour être particulièrement couteux.
+
+Ces dernières années, grâce la maturation des recherches sur les différentes stratégies et heuristiques de parcours de graphe (et notamment celles avec apprentissage) et des applications récentes sur des problèmes concrets comme l'ordinateur \textit{AlphaGo} qui grâce à une implémentation de l'heuristique du Monte Carlo Tree Search a réussi à battre le champion du monde actuel, ces méthodes ce sont popularisées.
+
+Dans ce mémoire, nous présentons la notion d'heuristique, les différentes modélisations possibles, les algorithmes de parcours populaires, des heuristiques d'apprentissage et plus particulièrement les heuristiques Monte Carlo Tree Search (MCTS) ainsi que des applications au test logiciel. 
+Enfin nous regardons si il serait possible d'appliquer des heuristiques de recherches (intelligentes) pour la génération de tests et plus particulièrement à des fins de faciliter l'apprentissage de la programmation\cite{symbolic-execution-machine-learning}.\\
+
+Ces dernières années des méthodes d'intelligence artificielles ont été appliqués dans de nombreux domaines, c'est le cas par exemple de l'ordinateur X qui a battu le joueur Y au jeu de GO grâce à un algorithme reposant sur la famille des Monte Carlo Tree Search, méthode de recherche basé sur l'apprentissage\cite{shadow}.
+
+Émergence de solutions pratiques\cite{ART} car la recherche est disponible (30ans de recherche d'IA) et que l'aire de big data ont permis l'émergence de cas d'applications concrets.
 
 Intérêt: utiliser les méthodes de recherches arborescentes informées permettant de trouver des solutions à un problème donné à forte combinatoire et ceci en un temps raisonnable.
 
 Le test et la vérification logiciel est un domaine très important pour X, Y et Z.
 La vérification de logiciel et la génération de tests est souvent limité à cause de la complexité des programmes et des ressources limités des ordinateurs actuels.
-%TODO Quels sont les motivations ?
-%TODO Intérêt des tests logiciels et de la vérification pour améliorer la qualité logiciel
-%TODO Intérêt des différentes heuristiques et des parcours
-%TODO Présenter le plan + objectifs
 
 %TODO A supprimer (pour voir les citations en fait)
-A\cite{judea-pearl-heuristics}
-B\cite{MCTS-methods-survey}
-C\cite{MTCS-symbolic-execution-path-exploration}
-D\cite{MTCS-program-synthesis}
-E\cite{MTCS-symbolic-execution-less-path}
-F\cite{testing-and-machine-learning}
-G\cite{test-data-generation-water-drop}
-H\cite{symbolic-execution-machine-learning}
-I\cite{testsurvey}
-J\cite{shadow}    
-K\cite{ART}    
-L\cite{EFSM}    

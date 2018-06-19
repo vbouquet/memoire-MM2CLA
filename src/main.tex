@@ -85,7 +85,7 @@ backend=bibtex]{biblatex} % Use the bibtex backend with the authoryear citation 
 \author{Valentin \textsc{Bouquet}} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
 \addresses{valentin-bouquet@hotmail.fr} % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
 
-\keywords{heuristiques, exploration de chemin, test logiciel, exécution symbolique} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
+\keywords{heuristiques, exploration de chemins, test logiciel, génie logiciel, exécution symbolique, monte carlo tree search} % Keywords for your thesis, this is not currently used anywhere in the template, print it elsewhere with \keywordnames
 \university{\href{http://www.parisnanterre.fr/}{Université Paris Nanterre}} % Your university's name and URL, this is used in the title page and abstract, print it elsewhere with \univname
 \department{\href{https://www.parisnanterre.fr/organisation/departement-de-mathematiques-et-informatique-343280.kjsp}{Département de mathématiques et informatique}} % Your department's name and URL, this is used in the title page and abstract, print it elsewhere with \deptname
 
@@ -152,7 +152,7 @@ backend=bibtex]{biblatex} % Use the bibtex backend with the authoryear citation 
 % \hfill Valentin Bouquet
 
 %----------------------------------------------------------------------------------------
-%	ABSTRACT PAGE
+%	Résumé (abstract)
 %----------------------------------------------------------------------------------------
 
 \newenvironment{abstract}%
@@ -162,13 +162,16 @@ backend=bibtex]{biblatex} % Use the bibtex backend with the authoryear citation 
 
 \begin{abstract}
 
-- Importances des tests pour la qualité logiciel
+«Tester revient à confronter par des moyens statiques (analyse de code, revue, etc.) ou par des moyens dynamiques (exécution avec des valeurs particulières) les spécifications du logiciel, c’est à dire ce qu’il doit faire et éventuellement sous quelles contraintes (temps, utilisation de la mémoire, etc.), à sa réalisation, c’est à dire de quelle façon il répond au besoin exprimé en enchainant différentes actions élémentaires.»\cite{jfpp-test}
 
-- Problématique: analyse et outil avec un complexité importante en temps d'exécution. Impossible de tout couvrir.
+La génération automatique de tests est un domaine déjà bien développé qui permet aujourd'hui grâce à différentes analyse à partir du code comme celle de l'arbre syntaxique abstrait, du graphe de flot de contrôle (CFG) et d'application de méthodes comme l'exécution symbolique, concolique ou de model-checking d'extraire des propriétés parfois abstraites du code pour identifier des valeurs de tests pertinentes pour s'assurer de la qualité du programme.
 
-- Nécessite de contourner cette problématique en application des outils sur des logiciels en utilisant des propriétés qui font réduire l'ensemble des possibles.
+Ces approches sont malheureusement limitées de par la complexité grandissante des programmes à tester qui confronte ces méthodes à l'explosion du nombre de chemins, du nombre d'états ou de contraintes possibles. Pour représenter ces états et chemins, ces méthodes repose sur des modèles d'arbres qui ne peuvent être parcourus en intégralité à cause de leur taille. Les algorithmes de parcours actuellement utilisés repose souvent sur des stratégies simples comme le parcours en profondeur qui est connu pour être particulièrement couteux.
 
-- Possibilité d'appliquer des stratégies de recherches plus intelligentes pour détecter des erreurs ou des anomalies.\\
+Ces dernières années, grâce la maturation des recherches sur les différentes stratégies et heuristiques de parcours de graphe (et notamment celles avec apprentissage) et des applications récentes sur des problèmes concrets comme l'ordinateur \textit{AlphaGo} qui grâce à une implémentation de l'heuristique du Monte Carlo Tree Search a réussi à battre le champion du monde actuel, ces méthodes ce sont popularisées.
+
+Dans ce mémoire, nous présentons la notion d'heuristique, les différentes modélisations possibles, les algorithmes de parcours populaires, des heuristiques d'apprentissage et plus particulièrement les heuristiques Monte Carlo Tree Search (MCTS) ainsi que des applications au test logiciel. 
+Enfin nous regardons si il serait possible d'appliquer des heuristiques de recherches (intelligentes) pour la génération de tests et plus particulièrement à des fins de faciliter l'apprentissage de la programmation.\\
 
 \textbf{Mots clés:} \keywordnames
 %Le test d'application est une part importante du cycle de développement d'une application. Le coût des tests occupe entre 30\% et 50\% du développement.
@@ -181,13 +184,22 @@ backend=bibtex]{biblatex} % Use the bibtex backend with the authoryear citation 
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
-%	ACKNOWLEDGEMENTS
+%	Remeciements
 %----------------------------------------------------------------------------------------
 \ohead*{} % Numéro de page en haut
 \ofoot*{\pagemark} % Numéro de page en bas
 \begin{acknowledgements}
-%\addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
-Merci, c'était super.
+
+%TODO
+Cette année est l'aboutissement de 5 années d'études universitaires et je tiens donc à saluer tous les enseignants et chercheurs que j'ai pu côtoyer durant toutes ces années ainsi que tous les étudiants des formations classiques et en apprentissage, de la licence au master de la \textit{MIASH} et de la \textit{MIAGE} de Paris-Nanterre.\\
+
+Je pense aussi aux opportunités qui se sont présentées à moi afin de poursuivre mes études sereinement dans le supérieure. Il ne fait aucun doute que le climat universitaire français est généreux et que sans lui il m'aurait été impossible de continuer comme je l'ai fait. J'espère que les générations futures seront tout aussi à mène d'en bénéficier et de savourer cette chance. En espérant que les entraves à ce système s'essoufflent et laisse place à un avenir plus prometteur.\\
+
+Je remercie Emmanuel Hyon pour son encadrement, son écoute et pour sa bienveillance envers ses étudiants ainsi que pour ses conseils qu'il a su me prodiguer, y compris pour la rédaction de ce mémoire.\\
+
+Je remercie particulièrement François Delbot et Jean-François Pradat-Peyre pour tout le soutien qu'ils m'ont porté et de m'avoir permis de travailler dans d'excellentes conditions. Je les remercie vivement pour tout les conseils, avis et discussions qu'ils m'ont apportés qui m'ont ouvert vers de nouvelles horizons.
+Sans leurs soutiens, je n'aurais jamais une seconde pu imaginer poursuivre un travail de recherche. J'espère que ces récents espoirs seront trouver satisfaction.
+
 \end{acknowledgements}
 
 
