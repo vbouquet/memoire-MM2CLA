@@ -1,24 +1,61 @@
 \chapter*{Introduction}
 \addchaptertocentry{Introduction}
-%TODO 
-«Tester revient à confronter par des moyens statiques (analyse de code, revue, etc.) ou par des moyens dynamiques (exécution avec des valeurs particulières) les spécifications du logiciel, c’est à dire ce qu’il doit faire et éventuellement sous quelles contraintes (temps, utilisation de la mémoire, etc.), à sa réalisation, c’est à dire de quelle façon il répond au besoin exprimé en enchainant différentes actions élémentaires.»\cite{jfpp-test}\cite{judea-pearl-heuristics}\cite{MCTS-methods-survey}\cite{MTCS-symbolic-execution-path-exploration}\cite{MTCS-program-synthesis}\cite{MTCS-symbolic-execution-less-path}\cite{testing-and-machine-learning}
 
-La génération automatique de tests est un domaine déjà bien développé qui permet aujourd'hui grâce à différentes analyse à partir du code comme celle de l'arbre syntaxique abstrait, du graphe de flot de contrôle (CFG) et d'application de méthodes comme l'exécution symbolique, concolique ou de model-checking d'extraire des propriétés parfois abstraites du code pour identifier des valeurs de tests pertinentes pour s'assurer de la qualité du programme\cite{EFSM}  .
+% Mettre le bon header (au lieu de Table des matières)
+% C'est un fix parce que je masque les chiffre des chapitres avec *
+\pagestyle{headings}
+\markright{Introduction}
+\markleft{Introduction}
 
-Ces approches sont malheureusement limitées de par la complexité grandissante des programmes à tester qui confronte ces méthodes à l'explosion du nombre de chemins, du nombre d'états ou de contraintes possibles. Pour représenter ces états et chemins, ces méthodes repose sur des modèles d'arbres qui ne peuvent être parcourus en intégralité à cause de leur taille. Les algorithmes de parcours actuellement utilisés repose souvent sur des stratégies simples comme le parcours en profondeur qui est connu pour être particulièrement couteux.
+\subsection*{Motivations}
+%TODO Référence WEBSITE
+\textit{C.A.T.} est une plateforme pédagogique en ligne dont l'objectif est de proposer des outils d'aide à la création de supports de cours et d'exercices dans le cadre de l'apprentissage de la programmation. 
+Pour faciliter l'encadrement et apporter de l'autonomie aux étudiants, un des enjeux primaire rencontré par cette plateforme est celui de l'automatisation de la correction de programmes des apprenants et du retour.
+Évaluer le code source informatique d'un étudiant est une tâche laborieuse et délicate. Le code informatique demande une certaine rigueur et la relecture du code d'une personne peu expérimentée est une tâche difficile et fatigante. Un programme à priori juste peut échouer à cause d'erreurs de syntaxes jugées minimes.
 
-Ces dernières années, grâce la maturation des recherches sur les différentes stratégies et heuristiques de parcours de graphe (et notamment celles avec apprentissage) et des applications récentes sur des problèmes concrets comme l'ordinateur \textit{AlphaGo} qui grâce à une implémentation de l'heuristique du Monte Carlo Tree Search a réussi à battre le champion du monde actuel, ces méthodes ce sont popularisées.
+Actuellement un encadrent doit lui même, à l'aide des outils mis à disposition par \textit{C.A.T.}, définir les tests que devront passer les programmes des étudiants pour être jugés correct. Pour cela, nous avons fait le choix de proposer des outils favorisant la comparaison entre le programme de la correction, fournit par l'encadrent et le programme source de l'étudiant.
+Il s'agit donc de tester la conformité du programme correction avec le programme donné par un apprenant qui aura été réalisé à l'aide des spécifications des éléments attendus dans l'énoncé de l'exercice.
 
-Dans ce mémoire, nous présentons la notion d'heuristique, les différentes modélisations possibles, les algorithmes de parcours populaires, des heuristiques d'apprentissage et plus particulièrement les heuristiques Monte Carlo Tree Search (MCTS) ainsi que des applications au test logiciel. 
-Enfin nous regardons si il serait possible d'appliquer des heuristiques de recherches (intelligentes) pour la génération de tests et plus particulièrement à des fins de faciliter l'apprentissage de la programmation\cite{symbolic-execution-machine-learning}.\\
+Bien que l'automatisation de cette correction permette de faciliter l'analyse en factorisant la correction sur les programmes des étudiants (création d'un jeu de tests pour $n$ programmes), cette automatisation nécessite toujours la participation active de l'encadrent lors de l'écriture des tests. L'écriture des tests n'est pas aisée puisqu'elle demande une certaine expertise technique allant au delà du langage de programmation. 
+De plus, l'encadrent peut, par faciliter ou simplement par manque de temps, négliger la qualité de ses tests et omettra de couvrir certains cas importants. Ce seront donc potentiellement des programmes que le jeu de tests aura validé qui pourraient être erronés dans certaines configurations. 
 
-Ces dernières années des méthodes d'intelligence artificielles ont été appliqués dans de nombreux domaines, c'est le cas par exemple de l'ordinateur X qui a battu le joueur Y au jeu de GO grâce à un algorithme reposant sur la famille des Monte Carlo Tree Search, méthode de recherche basé sur l'apprentissage\cite{shadow}.
+L'objectif fixé est de favoriser la mise à disposition automatisé de jeux de tests pour faciliter le travail des évaluateurs. Proposer des valeurs qui soient intéressantes pour couvrir les erreurs les plus fréquentes est une tâche difficile. 
+Des outils d'analyse statique et dynamique permettent aujourd'hui de déchiffrer en partie le comportement des programmes mais ces techniques sont parfois limitées à cause de la complexité des programmes et des contraintes des machines et outils.
+Il existe donc un intérêt à disposer d'outils qui permettent de détecter automatiquement des divergences entre programmes et qui soient exécutables en des temps raisonnables. 
+Le but fixé n'est pas de détecter forcément tous les éventuels cas de divergences mais de se servir d'heuristiques pour parcourir le comportement des programmes en un temps limité tout en classifiant les éléments qui sont à l'origine d'éventuels divergences de comportements. Nous espérons pouvoir tirer parti de cette classification pour limiter les chemins d'exécution à parcourir des autres programmes. Nous devons donc trouver des solutions pour détecter au moins un chemin d'exécution qui donne un comportement divergeant pour utiliser les informations des contraintes sur ce chemin pour faciliter les parcours des chemins d'exécutions possibles des autres programmes.
 
-Émergence de solutions pratiques\cite{ART} car la recherche est disponible (30ans de recherche d'IA) et que l'aire de big data ont permis l'émergence de cas d'applications concrets.
+%\subsection*{Génération automatique de tests et limitations}
+%«Tester revient à confronter par des moyens statiques (analyse de code, revue, etc.) ou par des moyens dynamiques (exécution avec des valeurs particulières) les spécifications du logiciel, c’est à dire ce qu’il doit faire et éventuellement sous quelles contraintes (temps, utilisation de la mémoire, etc.), à sa réalisation, c’est à dire de quelle façon il répond au besoin exprimé en enchainant différentes actions élémentaires.»\cite{jfpp-test}
+%
+%La génération automatique de tests\cite{orchestrated-survey-automated-test} est un domaine déjà bien développé qui permet aujourd'hui grâce à différentes analyse à partir du code comme celle de l'arbre syntaxique abstrait, du graphe de flot de contrôle (CFG) et d'application de méthodes comme l'exécution symbolique, concolique ou de model-checking, d'extraire des propriétés parfois abstraites du code pour identifier des jeux de tests pertinent pour s'assurer de la qualité du programme\cite{EFSM}.
+%
+%Ces approches sont malheureusement limitées\cite{test-auto-solved-yet} de par la complexité grandissante des programmes qui confrontent ces méthodes à l'explosion du nombre de chemins, du nombre d'états ou de contraintes possibles. Pour représenter ces états et chemins, ces méthodes reposent sur des modèles d'arbres qui ne peuvent être parcourus en intégralité à cause de leur taille. Les algorithmes de parcours actuellement utilisés reposent majoritairement sur des stratégies simples comme le parcours en profondeur qui est connu pour être particulièrement couteux mais qui a le bénéfice de trouver au moins un chemin d'exécution possible.
+%
+%Ces dernières années, grâce à la maturation des recherches sur les différentes stratégies et heuristiques de parcours de graphe (notamment celles avec apprentissage) et des applications récentes sur des problèmes concrets, comme celui du jeu de go où l'ordinateur \textit{AlphaGo}\cite{AlphaGo-research} qui grâce à une implémentation de l'heuristique du Monte Carlo Tree Search a réussi à battre le champion du monde actuel, ces méthodes ce sont popularisées.
 
-Intérêt: utiliser les méthodes de recherches arborescentes informées permettant de trouver des solutions à un problème donné à forte combinatoire et ceci en un temps raisonnable.
+%\subsection*{Détection de divergences entre versions d'un logiciel}
+%Pour la détection de divergences de comportements entre deux versions d'un même logiciel, il existe des solutions qui permettent de limiter la combinatoire et notamment pour l'exécution symbolique.
+%Une de ces méthodes proposées est présentée dans l'article \textit{Shadow of a doubt: Testing for divergences Between Software Versions}\cite{shadow} (en référence au célèbre film Alfred Hitchcock: \textit{L'ombre d'un doute}). 
+%
+%Le postulat de départ est qu'il serait moins couteux de comparer deux versions d'un même logiciel uniquement aux endroits où le code à été modifié. Au lieu de se baser sur l'analyse complète des deux arbres d'exécution symbolique du programme, nous partirions donc des sous-arbres de ces ensembles, là ou la divergence de code est présente, pour établir l'analyse.
+%Pour cela, il est proposé de fondre les deux versions du programme en tenant compte des modifications effectuées et ceci grâce à quelques annotations qui permettent de générer des branches d'exécutions séparées là où le code diverge.
+%
+%Même si cette approche paraît particulièrement intéressante, nous doutons de son intérêt dans notre cas où nous ne disposons pas de deux versions d'un même programme mais de n programmes implémentant tous une même spécification (description en langue naturel ou par des formules mathématiques de ce qui doit être produit). 
+%Potentiellement, ces programmes pourraient être intégralement différents dans leur structure bien que leurs comportements à l'exécution seraient identiques. Il est donc plus difficile de bénéficier de la proximité des programmes pour limiter la combinatoire de l'exécution symbolique.
 
-Le test et la vérification logiciel est un domaine très important pour X, Y et Z.
-La vérification de logiciel et la génération de tests est souvent limité à cause de la complexité des programmes et des ressources limités des ordinateurs actuels.
+\subsection*{Objectifs du mémoire}
+Dans ce mémoire nous présentons dans un premier temps la thématique du test logiciel et plus spécifiquement des techniques de génération automatique de tests (exécution symbolique, model-checking, méthodes aléatoire) ainsi que leurs limitations et une méthode proposée pour détecter des divergences entre deux versions d'un même logiciel (cas le plus proche de ce que nous souhaitons faire).
+Puis nous introduirons la notion d'heuristique et les différentes modélisations possibles et compléterons sur les procédures de recherche simples ainsi que sur celles avec apprentissage comme le Monte Carlo Tree Search (MCTS) afin d'y voir plus clair sur les méthodes utilisées pour diminuer la complexité.
+Enfin nous établirons les liens possibles entre les méthodes de recherche heuristique avec apprentissage et l'exécution symbolique pour faciliter la détection de divergence de programmes dans le cadre de l'apprentissage de la programmation.
 
-%TODO A supprimer (pour voir les citations en fait)
+%Dans ce mémoire, nous présentons la notion d'heuristique, les différentes modélisations possibles, les algorithmes de parcours populaires, des heuristiques d'apprentissage et plus particulièrement les heuristiques Monte Carlo Tree Search (MCTS) ainsi que des applications au test logiciel. 
+%Enfin nous regardons si il serait possible d'appliquer des heuristiques de recherches (intelligentes) pour la génération de tests et plus particulièrement à des fins de faciliter l'apprentissage de la programmation\cite{symbolic-execution-machine-learning}.\\
+
+%Ces dernières années des méthodes d'intelligence artificielles ont été appliqués dans de nombreux domaines, c'est le cas par exemple de l'ordinateur X qui a battu le joueur Y au jeu de GO grâce à un algorithme reposant sur la famille des Monte Carlo Tree Search, méthode de recherche basé sur l'apprentissage\cite{shadow}.
+%
+%Émergence de solutions pratiques\cite{ART} car la recherche est disponible (30ans de recherche d'IA) et que l'aire de big data ont permis l'émergence de cas d'applications concrets.
+%
+%Intérêt: utiliser les méthodes de recherches arborescentes informées permettant de trouver des solutions à un problème donné à forte combinatoire et ceci en un temps raisonnable.
+%
+%Le test et la vérification logiciel est un domaine très important pour X, Y et Z.
+%La vérification de logiciel et la génération de tests est souvent limité à cause de la complexité des programmes et des ressources limités des ordinateurs actuels.

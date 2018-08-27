@@ -1,5 +1,13 @@
 %----------------------------------------------------------------------------------------
-%	CHAPITRE 3
+%	Conclusion
 %----------------------------------------------------------------------------------------
 \chapter*{Conclusion}
+
 \addchaptertocentry{Conclusion}
+
+Dans ce mémoire nous avons présenté les différentes méthodes de génération automatique de tests dont l'exécution symbolique qui nous semblait pouvoir correspondre à notre problème. Même si toutes ces techniques paraissent prometteuses, de nombreuses problématiques ont à chaque fois été rencontrées à cause de la complexité des programmes à analyser (explosion du nombre de chemin, complexité des contraintes, etc.). C'est dans l'optique de trouver des solutions qui nous permettent de générer des tests en un temps raisonnable en utilisant les connaissances récoltées par les analyses précédentes que nous avons décidé de parcourir l'état de l'art des heuristiques de recherche dans l'espoir de comprendre et de pouvoir appliquer une heuristique à une des méthodes de génération pour résoudre notre problème.
+
+Les heuristiques de renforcements qui se popularisent ces dernières années apparaissent prometteuses pour notre cas d'utilisation. Elles nous permettraient de tirer parti de la variété de nos programmes qui sont supposés exécuter tous un même comportement pour classifier les données et parcourir plus efficacement les arbres d'exécutions associés. C'est pour cette raison que nous nous sommes attardés sur le \textit{Monte Carlo Tree Search} qui permettait de résoudre des problèmes complexes en un temps minimal tout en classifiant les données rencontrées et en proposant des parcours intelligents.
+
+Dans la dernière partie, nous avons présenté une ébauche de méthode pour tirer parti de tous les éléments vus précédemment, c'est à dire de l'exécution symbolique et plus spécifiquement de l'exécution concolique et d'une heuristique inspirée du \textit{Monte Carlo Tree Search}. L'application de cette méthode dans le but de l'évaluer reste problématique puisque les outils d'exécution symbolique sont complexes et qu'il est délicat de les instrumenter dans notre cas d'utilisation pour un initié. De plus, d'autres problématiques se sont posées pour tirer au maximum parti de la classification des données lors de nos parcours. Transposer les données d'un arbre d'exécution symbolique à un autre n'est pas aisé puisque des programmes peuvent appliquer des méthodes différentes pour résoudre un même problème.
+Il ne fait aucun doute que le travail a réalisé reste conséquent.

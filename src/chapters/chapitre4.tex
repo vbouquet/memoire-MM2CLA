@@ -1,0 +1,94 @@
+%----------------------------------------------------------------------------------------
+%	CHAPITRE 4
+%----------------------------------------------------------------------------------------
+\chapter{Application}
+
+\label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter2} 
+
+%----------------------------------------------------------------------------------------
+%	SECTION 1
+%----------------------------------------------------------------------------------------
+\section{Contexte}
+
+\subsection{Apprentissage de la programmation et tests}
+Maintenant que nous avons vu différentes techniques de génération automatiques de tests, leurs tenants et aboutissants ainsi que la notion d'heuristique et les algorithmes de recherche avec renforcement les plus populaires, rappelons nos objectifs.\\
+
+Dans le cadre de l'apprentissage de la programmation, nous souhaitons évaluer des programmes sources d'apprenants. Pour cela nous avons fait le choix de proposer une approche comparative, l'évaluateur soumet le code de la correction et les spécifications sous forme de formules mathématiques ou de simples phrases en langue naturel que doivent suivre les apprenants pour réaliser un programme qui exécute le comportement souhaité.
+Pour cela, nous mettons à disposition des outils qui facilitent la comparaison à l'exécution du programme soumis par l'apprenant au programme de la correction.
+Bien que ces tests soient très pratiques, leur écriture est encore laborieuse puisqu'elle demande un investissement conséquent et une certaine expertise. De plus, les tests sont souvent négligés par les évaluateurs et de nombreux programmes qui ne devraient pas être corrects le sont par manque de couverture des différents cas d'exécution.
+Nous souhaitons donc disposer d'outils pour générer des tests afin de détecter de manière automatisé les divergences de comportements entre deux programmes.
+
+\subsection{Limitations des méthodes existantes}
+%Problématique limitation
+Nous avons vu que de nombreuses méthodes existent et font l'objet de recherche intensive dans le domaine du génie logiciel dans un objectif d'améliorer la qualité des programmes testés en facilitant la génération et en améliorant la qualité des jeux de tests générés. Nous avons aussi remarquer que ces méthodes sont dans certains cas assez limités et sont difficiles à réaliser dans des cas concrets.
+
+C'est le cas de l'exécution symbolique qui est limitée face à l'explosion du nombre de chemins d'exécutions possibles d'un programme. Dans nos cas d'utilisations c'est une contrainte que nous pourrions rencontrer fréquemment puisqu'une simple fonction avec des boucles imbriquées et des conditions suffit à mettre à bout bon nombre d'outils sur une machine standard. De plus, les contraintes de chemins dépendant d'opérations non linéaires (sin, cos, multiplication, ...) contraignent aussi fortement la résolution des équations par les solveurs.
+
+Des approches aléatoires sont aussi possibles mais sont souvent peu efficaces et plus le domaine d'entrée d'un programme est grand, moins les valeurs d'entrées générées auront une chance d'être pertinentes.
+
+Les méthodes de \textit{Search-Based Testing} proposent de contourner les contraintes rencontrées grâce à l'utilisation de procédures de recherches pour optimiser la génération des tests en fonction d'un objectif précis. Malheureusement, cette objectif ce résume bien trop souvent à un objectif de couverture de branche qui reste très limité puisqu'il ne tient pas compte du comportement du programme en fonction des valeurs d'entrées.
+
+\subsection{Objectifs}
+%Ce que nous souhaitons faire
+Comme nous disposons d'un cas très spécifique grâce à notre cadre d'apprentissage de la programmation, c'est à dire que nous avons une configuration avec plusieurs programmes ayant pour objectif de s'exécuter à l'identique du programme de la correction. Nous pensons qu'il serait judicieux d'utiliser une heuristique adaptée à notre cas en les complétant à des techniques de renforcement pour affiner et améliorer le parcours de chaque programme analysé.
+
+%----------------------------------------------------------------------------------------
+%	SECTION 2
+%----------------------------------------------------------------------------------------
+\section{Méthode proposée}
+
+\subsection{Présentation}
+Nous possédons le code source du programme de la correction qu'on notera $C$ et de $n$ code source provenant de $n$ apprenants ayant tentés de produire un programme suivant les consignes de l'exercice. Les programmes des apprenants sont note $Pi$ où i représente le numéro du programme parmi l'ensemble.
+
+\subsubsection*{Étape de filtrage}
+Nous définissons une première étape de test qui utilise $k$ valeurs d'entrées générées aléatoirement mais suffisamment éloignées les unes des autres. Ces jeux de tests serviront à filtrer les programmes dont le comportement s'éloigne trop de ce qui était attendu. 
+Au final, nous souhaitons garder pour l'analyse uniquement les programmes qui se rapproche de la solution, où il serait pertinent de trouver un ou plusieurs jeux de tests appropriés pour découvrir une divergence de comportement. 
+L'approche aléatoire avec un jeu de données disparates et suffisant nous permet de nous conforté dans l'idée que ces programmes ne correspondent pas au résultat attendu.
+
+Cette étape de filtrage est importante, puisque nous souhaitons minimiser la charge de calcul lors des prochaines analyses. De plus, comme nous souhaitons classifier les instructions des programmes des apprenants, il est important que ces instructions soient utiles à l'exécution pour effectuer le comportement souhaité. Au moins, en retirant les programmes qui sont faux, nous retirons les potentiels programmes n'ayant aucun rapport avec l'exercice, ce qui permet de ne pas polluer la classification. 
+
+Toujours dans l'optique de filtrage, nous pourrions appliquer des techniques de \textit{slicing} qui permettent de ne garder que le code nécessaire à une certaine utilisation mais ces techniques sont difficilement applicables à des programmes courts, ce qui représente la majorité des cas dans notre cadre. 
+De plus, il faut noter qu'au préalable à l'analyse de comportement d'un programme, nous menons une analyse structurelles sur les programmes pour vérifier que certaines instructions sont bien présentes. Ces tests peuvent être éliminatoires et permettent de filtrer plus amplement les programmes.
+
+\subsection*{Démarche d'analyse}
+Nous prenons un programme $Pi$ au hasard parmi ceux ayant passé la première étape de filtrage et on applique notre analyse. Celle ci est un mixte entre l'exécution symbolique et l'heuristique du Monte Carlo Tree Search où nous utiliserons en fait l'exécution concolique lors de la simulation.
+
+Notre premier programme est donc analysé symboliquement de la façon suivante:
+
+\subsubsection*{Sélection}
+Nous allons faire des choix, dans un premier temps aléatoire, pour décider à chaque nœud (représentant la contrainte séparant des chemins d'exécutions) vers quel direction nous allons. C'est donc la phase de sélection.
+
+\subsubsection*{Génération}
+Une fois le nœud sélectionné, nous utiliserons une des bornes de la dernière contrainte rencontrée pour générer une première valeur d'entrée au programme satisfaisant à la limite une des bornes de la contrainte. 
+Par exemple pour une contrainte où $x < 10$ où $x$ est un entier positif et paramètres d'entrées de la fonction, nous utiliserons $x = 9$. Si la contrainte exprimée par ce nœud, ne peut être affectée par une valeur d'entrée alors elle sera ignorée et nous passerons à la prochaine étape de sélection.
+Nous avons fait le choix de sélectionner des valeurs bornant les contraintes de chemins dans un premier temps car ce sont souvent sur les valeurs bornés que les apprenants se trompent lors de la rédaction de leurs programmes (exemple: $n-1 < 10$ au lieu de $n < 10$).
+
+\subsubsection*{Simulation}
+Grâce à cette valeur d'entrée que nous avons généré, nous pouvons donc l'injecter dans le programme de l'apprenant et de la correction pour détecter des éventuelles divergences de comportement, c'est une exécution concolique. On suppose d'ailleurs que si le programme plante pour une valeur donnée alors cela est considéré immédiatement comme une divergence.
+De plus c'est cette exécution concolique qui pourrait permettre de résoudre le problème de complexité des contraintes. Si elles deviennent trop importantes, elles pourraient être remplacées par des valeurs concrètes obtenus lors de l'exécution du programme et faciliter l'exécution des solveurs de contraintes.
+
+\subsubsection*{Propagation}
+Une divergence dans notre cas correspond à un succès et une correspondance de comportement à un échec. Nous décidons donc si une divergence est détectée, de remonter l'information  au nœud du chemin parcouru. Cette information, nous servira à classifier les instructions du langage menant à une divergence en supposant que ces instructions, pourront aussi mener à des divergences sur d'autres programmes. En parallèle de ça, nous mettons la valeur générée de côté pour en faire un éventuel jeu de test.\\
+
+Une fois la simulation exécutée, nous retournons à l'étape de sélection et ainsi de suite jusqu'à ce que suffisamment de jeux de tests montrant une divergence ont été trouvés ou que le temps de calcul pour l'analyse qui devrait être fixé au préalable a été écoulé.\\
+
+Une fois cette méthode posée, quelques questions se posent encore:
+\begin{itemize}
+\item si un nombre conséquent de jeux de test montrant une divergence de comportement sur ce programme ont été trouvés, comment filtrer ceux qui le seront sur d'autres programmes ?
+\item comment transposer les données des nœuds des branches pour les appliquer sur d'autres arbres d'exécution d'autres programmes ?
+\end{itemize}
+
+\subsubsection*{Sélection des valeurs générées}
+Dans le cas où de nombreuses valeurs seraient générées nous pouvons simplement décider de n'utiliser que les valeurs de tests qui détectent une divergence sur au moins $k$ programmes parmi $n$. L'avantage de notre méthode réside donc dans le nombre d'itérations de notre analyse sur tous les programmes pour y détecter des erreurs récurrentes. On peut imaginer que si tous les programmes éronnés implémentent chacun un type d'erreur différent, alors notre méthode sera caduque.
+
+\subsubsection*{Correspondance de la classification}
+Les contraintes de chemins d'un programme qui font l'objet d'une divergence auront été classifiés pour favoriser le parcours de ces chemins afin de détecter d'autres erreurs dans d'autres programmes.
+Pourtant, il n'est pas dit que les autres programmes puissent correspondre en terme de contraintes puisque deux programmes peuvent implémenter la même fonctionnalité avec une structure interne complètement différente. 
+Nous pensons tout de même qu'il existe quelques techniques pour valoriser les analyses précédentes. Nous pouvons dans un premier utiliser des techniques de renommage pour uniformiser les programmes. De plus, nous pouvons avec l'exécution symbolique associer un nœud avec le code associé et éventuellement y récupérer les instructions utilisées. Ces informations peuvent être précieuses puisqu'elles pourraient permettre d'identifier des \textit{pattern} récurrents dans l'ordre d'exécution des instructions qui sont à l'origine d'erreur.
+
+\subsection{Problématiques restantes}
+Nous avons présenté une démarche tirant parti des techniques du domaine du test avec l'exécution symbolique et concolique associé à une heuristique de recherche avec apprentissage avec le \textit{Monte Carlo Tree Search}. Cette présentation n'est qu'une ébauche, sa réalisation nécessite de maitriser des outils d'exécution symbolique qui sont souvent complexes et de pouvoir l'instrumenter pour tenir compte de notre cas d'utilisation, ce qui demande un certain temps. Outre les problématiques associées à l'évaluation de la capacité de cette méthode à répondre à notre besoin, nous avons d'autres problématiques qui se posent aussi et qui devront être complétées.\\
+
+La première est la détermination de l'ordre dans lequel les programmes sont analysés. Comme nous tirons parti des techniques de classification, il est important que les premiers programmes puissent nous apporter une quantité d'informations suffisantes pour guider les prochaines analyses. Nous pensons qu'il est important de limiter la quantité de programmes à analyser et c'est pourquoi nous avons présenter une technique de filtrage mais il doit aussi être possible de déterminer l'ordre dans lequel les programmes seront analysés selon certains critères. Nous pouvons par exemple, analyser le premier programme de manière aléatoire et si celui ci ne permet pas de détecter d'erreur, alors nous pourrions sélectionner le prochain programme selon sa distance avec le programme courant. Par distance on entend le nombre de différence qu'un programme aurait dans sa structure par rapport à un autre, comme nous pourrions exprimer la distancer entre deux chaînes de caractères. Ceci n'est bien sur qu'une brève proposition mais il doit exister des techniques plus efficaces.\\
+
+Le nombre de simulation est déterminant pour s'assurer de la qualité du parcours du MCTS. Dans notre cas, nous ne simulons pas réellement puisque nous exécutons le programme avec des valeurs générés (conjointement avec le programme de la correction). Il est très probable que cette simulation soit problématique à cause du temps d'exécution possible des programmes. Bien qu'on soit dans un cadre d'apprentissage, il est possible que des programmes mal écrit soit particulièrement lent mais correct. Il faut donc trouver des solutions pour diminuer cette complexité, l'idéal serait bien sur de ne pas exécuter le programme mais de le simuler complètement.

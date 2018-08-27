@@ -1,235 +1,218 @@
 %----------------------------------------------------------------------------------------
 %	CHAPITRE 2
 %----------------------------------------------------------------------------------------
-\chapter{Procédures de recherches}
+\chapter{Heuristique de recherche} % Nom du premier chapitre
 
-\label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter2} 
+\label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
-Nous avons définie la notion d'heuristique de recherche, présenté quelques problèmes types rencontrés en y appliquant des heuristiques simples et intuitives ainsi que des contraintes rencontrées lorsque les données à parcourir sont trop importantes et développé différentes méthodes pour modéliser nos problèmes. 
-Ce chapitre présente quelques algorithmes et méthodes connus pour parcourir et rechercher des propriétés dans nos graphe (modèle).
-Ces algorithmes définissent des stratégies ou politiques de recherche déterminant l'ordre dans lequel les nœuds du graphe seront parcourus afin d'obtenir la solution solution souhaitée ou une solution proche dans le cas d'heuristique.
 
-Dans un premier temps nous présentons les procédures simples avec les algorithmes de parcours de graphe les plus populaires puis nous continuerons sur les recherches avec apprentissage.
 
 %----------------------------------------------------------------------------------------
 %	SECTION 1
 %----------------------------------------------------------------------------------------
-\section{Procédures de recherches simples}
-%TODO Petite transition introductif
-Nous présentons deux grands types de stratégies que sont les stratégies informées ou à l'aveugle et les stratégies guidées ou informées.
+\section{Définitions et intérêt}
+Les heuristiques sont des critères, méthodes ou principes utilisées pour sélectionner une solution efficace parmi un ensemble possible afin d'atteindre un ou plusieurs objectifs fixés\cite{judea-pearl-heuristics}.
+Elles ne sont d'ailleurs pas toujours justes ou fiables dans toutes les situations et peuvent donc être hasardeuses.
 
-%\subsection{Hill climbing}
-%TODO Doit-on faire ce type de parcours ? Il n'est ni informée ni non informée et il faut donc une nouvelle section (P.35)
-%La plus populaire. Depuis la position courante, sélectionner la montée la plus rapide.
-%Possibilité de trouver un chemin ne finissant jamais et sans solution.
-%Comme on ne peut pas passer 2 fois sur un noeud, il faut fermer un chemin si il n'est pas correct et on ne pourra plus le reprendre même pour optimiser son parcours. Il est donc possible de parcourir un chemin à partir de toutes les branches de profondeur 1 sans trouver de solution.
+Pour une grande majorité des problèmes complexes, déterminer une solution exacte nécessite d'évaluer un immense ensemble de choix. Le temps requis pour trouver cette solution peut être trop important et il est nécessaire parfois de faire des compromis pour obtenir une solution efficace en un temps raisonnable en utilisant une heuristique. 
 
-%Avantages: 
+Elles sont particulièrement utilisées pour répondre aux problèmes dits NP-complet. Ce sont les problèmes pour lesquels tous les algorithmes connus requièrent un temps exponentiel en pire cas pour être résolus. 
+Un des exemples les plus connus et fréquemment enseigné en cours d'algorithmique est le problème du voyageur de commerce.
 
-%- Quand on connait/possède des informations pour éviter les mauvais parcours et atteindre plus rapidement l'objectif fixé.
-
-%- Histoire sur les expansions commutatives: l'expansion d'un noeud ne compremet pas l'expansion des autres noeuds ou même de leurs descendants. Si une stratégie irrévocable est prise (mauvais chemin) alors cela n'affectera pas les prochains parcours.
-
-\subsection{Recherche non informée}
-On dit que la recherche n'est pas informée quand dans un graphe, la location de l'objectif n'altère pas l'ordre dans lequel les nœuds seront parcourus.
-Ces stratégies sont souvent inefficaces et peu pratiques dans le cas de larges problèmes mais elles ont l'avantages d'être simples et peuvent être appliquées à tout problème puisqu'elles ne prennent  pas compte des données propres au domaine.
-
-\subsubsection{Parcours en profondeur (DFS)}
-Le parcours en profondeur donne la priorité aux nœuds les plus profonds du graphe et s'applique plus particulièrement au graphe de type arbre ou la profondeur est clairement définie.
-Pour les autres types de graphe, il faudra définir la notion de profondeur et la direction dans laquelle se diriger.
-
-Ce type de parcours assure de trouver la solution, puisqu'en pire cas toutes les solutions seront énumérées ce qui rend cet algorithme peu efficace dans de nombreux cas.\\
-%TODO lesquels ?
-
-%Variante backtracking
-{\setlength{\parindent}{0cm}\textbf{backtracking:}}
-
-Le \textit{backtracking} (ou retour sur trace) est une variante du parcours en profondeur qui permet de revenir en arrière à chaque action afin de minimiser le nombre de sommets du graphe à parcourir quand on se retrouve dans certaines situations qui ne correspondent pas à l'objectif recherché (propriétés d'un nœud non conforme).
-
-%TODO
-% C'est une version du parcours en profondeur qui applique la politique de dernier-entrée-premier-sortie (LIFO) pour la génération des nœuds au lieu de l'expansion.
-
-A chaque nœud, seulement un successeur est parcouru sauf si il ne remplit pas un critère donné. Dans le cas où il ne serait pas parcouru on revient à l'ancêtre le plus proche parcouru possédant au moins 1 sommet fils qui n'a pas été encore parcouru.
+\subsection{Problème du voyageur de commerce (TSP)}
+Soit un ensemble de \textit{n} villes réparties et un voyageur souhaitant toutes les parcourir une et une seule fois puis retourner à la ville d'où il est parti et ce en parcourant au total la distance la plus petite possible.
 
 \begin{center}
-    \includegraphics[scale=0.6]{../ressources/images/depth_first_search.png}
-    \captionof{figure}{Ordre dans lequel les sommets sont visités avec un parcours en profondeur (gauche) et sa variante (droite): le backtracking.}
+    \includegraphics[scale=0.6]{../ressources/images/probleme_voyageur.png}
+    \captionof{figure}{Un chemin possible pour résoudre le problème du voyageur de commerce.}
 \end{center}
 
-Les problèmes d'optimisation ou de semi-optimisation tire parti de ce type de parcours. Si l'objectif est de trouver le coût minimal alors cette stratégie est efficace puisqu'elle permet de parcourir le graphe tout en maintenant le coût à tout instant t et ceci en priorisant les sommets les plus proches de la racine.
+Il existe au total $n!$ chemins possibles soit dans notre cas 120. La ville de départ n'ayant aucune influence sur la longueur totale parcourue on peut donc réduire l'ensemble à $(n-1)!$ soit 24 chemins. Enfin chaque chemin pouvant être parcouru dans les deux sens sans impacter la distance,  on peut donc réduire l'ensemble final à $\frac{1}{2}(n-1)!$ soit 12 chemins.
 
-\subsubsection{Parcours en largeur (BFS)}
-Contrairement au parcours en profondeur, le parcours en largeur donne la priorité au nœuds des premiers niveaux du graphe, c'est à dire aux sommets les plus proches de la racine qui seront parcourus en premier. Elle s'applique plus facilement aux arbres puisque la notion de niveau est naturellement défini, contrairement aux autres types de graphe ou il faudra définir ce qu'on entend par largeur pour orienter le sens du parcours.
+% Table montrant l'évolution du nombre de chemins en fonction du nombre de villes
+\begin{table}[h]
+\centering
+\begin{tabular}{ l|r }
+  Villes & Chemins (solutions) \\
+  \hline
+  5 & 12 \\
+  10 & 181400 \\
+  15 & 43 589 145 600 \\
+  20 & 60 822 550 204 416 000 \\
+\end{tabular}
+  \caption{Évolution de l'ensemble des chemins en fonction du nombre de villes pour la résolution du problème du voyageur de commerce}
+\end{table}
 
-Cette stratégie garantie aussi de trouver la meilleure solution possible puisque en pire cas, tout le graphe sera parcouru. C'est donc une méthode qui peut rapidement devenir très couteuse.\\
+Le tableau ci-dessus rend compte de la rapidité à laquelle le nombre de chemins à évaluer grandit en fonction du nombre de villes. On parle d'\textit{explosion combinatoire}: c'est le fait qu'un problème se complexifie grandement lorsque le nombre de données à considérer augmente légèrement et peut rendre sa solution incalculable en un temps restreint (longévité humaine par exemple).
 
-%Variante procédure du coût uniforme
-{\setlength{\parindent}{0cm}\textbf{Procédure du coût uniforme:}}
+\subsection{Un algorithme glouton}
+Pour trouver une solution (pas forcément la meilleure) au problème du voyageur de commerce, nous pouvons utiliser une heuristique simple en utilisant un algorithme glouton. Un tel algorithme repose sur le fait de dérouler les données de manière itérative en sélectionnant à chaque étape un optimum local. Ceci a pour effet de grandement diminuer le nombre de données à considérer et donc de répondre en partie à l'explosion combinatoire.
 
-La procédure du coût une uniforme est une variante du parcours en largeur. Au lieu de procéder au parcours des nœuds d'une même profondeur, le parcours se fait en fonction du coût des nœuds. Chaque nœud est exprimé comme étant le coût du chemin menant à lui depuis le nœud racine et la stratégie est accomplie en parcourant toujours le nœud avec le coût le plus faible.
+\begin{algorithm}
+\caption{Problème du voyageur - un algorithme glouton} 
+\label{algo-glouton-TSP}
+\begin{algorithmic}
+\Function{determiner\_chemin}{$villes, n$}
+    \State $P := LISTE\_VIDE$
+    \State \textbf{choisir un sommet} u \textbf{dans} villes
+    \State $villes := villes - u$
+    \State $P := P \cup u$
+    \While{$|P| \ne n$}
+        \State $d := +\infty$
+        \For{v \textbf{in} villes}
+            \Comment{Évaluation de la ville la plus proche}
+            \If{$distance(u, v) < d$}  
+                \State $d := distance(c, v)$
+                \State $u` := v$
+            \EndIf
+        \EndFor
+        \State $u := u'$
+        \State $P := P \cup u$
+        \State $villes := villes - u$
+    \EndWhile
+    \State \Return $P$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
 
-\begin{center}
-    \includegraphics[scale=0.5]{../ressources/images/breath_first_search.png}
-    \captionof{figure}{Ordre dans lequel les sommets sont visités avec un parcours en largeur (gauche) et sa variante (droite): la procédure du coût uniforme.}
-\end{center}
+L'algorithme \ref{algo-glouton-TSP} présente une heuristique simple pour répondre aux problème d'explosion des chemins en diminuant le nombre de données à évaluer. 
+Depuis la ville de départ $u$ (choisit aléatoirement par exemple), il s'agit de sélectionner la ville la plus proche parmi les $n-1$ villes restantes. Puis de manière itérative, nous sélectionnons la prochaine ville la plus proche depuis la dernière ville sélectionnée et ceci jusqu'à ce que toutes les villes soient sélectionnées. 
+A la première itération nous avons donc $n-1$ distances à évaluer puis nous en aurons $n-2$ à la deuxième. Au final cet algorithme doit évaluer $\frac{n(n-1)}{2}$ distances. 
 
-\subsection{Recherche informée}
-Nous avons vu précédemment des stratégies qui ne prenaient pas en compte les données du problème autre que celles définies dans les sommets et les arêtes. Parfois il est possible de tirer parti d'informations qui ne sont pas dans le graphe pour diriger les recherches afin de parcourir les sommets qui ont l'air d'être les plus prometteurs.
-Cette section présente l'intérêt de combiner des méthodes (fonctions) heuristiques aux parcours classiques.
+\newpage
 
-\subsubsection{Best-First search (le meilleur d'abord)}
-\textit{Best-first search} est un algorithme qui parcourt le graphe en étendant le nœud le plus prometteur d'abord. Contrairement aux heuristiques gloutonnes qui elles aussi sélectionnent les meilleurs éléments d'abord, \textit{best-first search} le fait par évaluation, c'est à dire en estimant la valeur d'un nœud avant de le parcourir à partir de données du problème qui ne sont pas présent dans le graphe, comme une fonction heuristique qui permet d'estimer la valeur d'un nœud (récompense). De plus l'objectif de cette méthode n'est pas seulement de sélectionner le sommet le plus prometteur parmi un ensemble de nœud à prochainement parcourir mais de le sélectionner en comparant tous les sommets déjà rencontrés.
+Ceci montre un exemple simple d'utilisation d'une heuristique qui repose sur la découpe du problème en sous-problèmes pour réduire l'ensemble des données du domaine. L'inconvénient est qu'une telle méthode ne donne pas de garantie de résultât car le chemin le plus court possible n'est retourné que dans le meilleure des cas.
+La sélection d'une heuristique pour répondre à un problème réside dans le compromis entre le temps requis pour obtenir une solution et la qualité de la solution retournée c'est à dire sa proximité avec la meilleure solution possible. 
+Ces deux critères peuvent être évalués en moyenne, dans le pire cas possible, dans le meilleure cas possible ou bien les trois à la fois. \\
 
-La promesse, c'est à dire l'estimation de la qualité d'un nœud est estimé grâce à une fonction heuristique $f(n)$ qui peut dépendre des données du sommet $n$, de la description de l'objectif recherché, des informations récoltées lors du parcours de recherche et de toutes informations supplémentaires sur le domaine.\\
+% Table montrant l'évolution du nombre de chemins en fonction du nombre de villes
+\begin{table}[h]
+\centering
+\label{table-comparaison-chemins}
+\begin{tabular}{ l|r|r }
+  Villes & Chemins & Chemins (algorithme glouton) \\
+  \hline
+  5  & 12                     & 10  \\
+  10 & 18 1400                & 45  \\
+  15 & 43 589 145 600         & 105 \\
+  20 & 60 822 550 204 416 000 & 190 \\
+\end{tabular}
+  \caption{Comparaison du nombre de chemins évalués pour la résolution du problème du voyageur de commerce avec un algorithme glouton (heuristique).}
+\end{table}
 
-%TODO Définir fonction heuristique d'évaluation
+Les heuristiques sont intéressantes en dehors du domaine théorique car la majorité des problèmes pratiques ne nécessite pas d'établir la solution la plus optimale. On préférera trouver un équilibre entre la qualité de la solution obtenue et le coût pour trouver une telle solution qui est un critère non négligeable si l'on prend compte du contexte économique. On parle alors de problème de \textit{semi-optimisation} et plus particulièrement d'optimisation proche lorsque qu'il s'agit de trouver une solution dans un intervalle de coût définie ou de problème d'optimisation approximatif lorsqu'il s'agit de se rapprocher de l'optimum avec une probabilité importante.
 
-%TODO Présenter l'algorithme
+%TODO Paragraphe de transition
 
-%TODO Montrer l'algorithme tel qu'il est présent dans le livre
+% SOUS-SECTION 2
+\section{Modélisation}
+Pour établir une bonne heuristique et évaluer sa capacité à produire des solutions en un temps défini sur un problème donné, il convient de correctement représenter ce problème.
+De nombreux problèmes peuvent être formulés comme problème de satisfaction de contraintes - où l'on cherche des états ou des objets satisfaisant un certain nombre de critères - et d'optimisation de tâches. De plus, une heuristique doit pouvoir être automatisée et donc être résolu à l'aide des machines actuels.
 
-\textbf{L'algorithme best-first décrit par Judea pearl\cite{judea-pearl-heuristics}}
+Puisque toutes les recherches de solutions à un problème peuvent se résumer à la tâche de construire un object avec les caractéristiques données, les besoins\cite{judea-pearl-heuristics} pour la résolution avec un ordinateur sont les suivants:
+
 \begin{enumerate}
-\item Mettre le nœud racine (initial) dans la liste $NOEUDS OUVERTS$.
-\item Si la liste $NOEUDS OUVERTS$ est vide, arrêter le programme: pas de solution.
-\item Déplacer le nœud le plus prometteur de $NOEUDS OUVERTS$ c'est à dire celui pour lequel la fonction heuristique \textit{f} est minimum (ou maximum dans un problème de maximisation) dans la liste $NOEUDS FERMES$. On nomme ce nœud $n$.
-\item Si l'un des successeurs de $n$ est l'objectif alors retourné le chemin vers ce nœud.
-\item Pour chacun des successeurs $n'$ de n:
-    \begin{enumerate}
-    \item Calculer $f(n')$.
-    \item Si $n'$ n'était ni dans la liste $NOEUDS OUVERTS$ ni $NOEUDS FERMES$, l'ajouter dans la liste $NOEUDS OUVERTS$. Attaché l'évaluation de l'heuristique au nœud ainsi qu'un lien vers le nœud $n$.
-    \item Sinon comparer le résultât de la fonction heuristique avec le résultât enregistré (qui a été précédemment attaché au nœud). Si l'ancienne évaluation est meilleure (inférieure ou supérieure selon le problème de minimisation ou maximisation) alors passer à l'étape suivante. Si l'ancienne évaluation est moins bonne, remplacer l'évaluation ainsi que le lien  pour pointer vers le nœud $n$. Si le nœud $n$ est dans la liste $NOEUDS FERMES$, le déplacer dans $NOEUDS OUVERTS$.
-    \end{enumerate}
-\item Retourner à l'étape 2.
+\item Une structure de symbole appelée code ou base de données représentant les sous-ensembles des solutions potentielles.
+\item Un ensemble d'opérations ou des règles de production qui modifient les symboles de la base de données pour produire un sous-ensemble de solutions plus fins ou précis.
+\item Une procédure de recherche ou stratégie de contrôle qui décide quelles opérations sont à appliquer sur la base de données.
 \end{enumerate}
 
-%TODO Conclure sur l'intérêt de Best-first, pourquoi on l'utilise ? (P.49)
-%TODO Définir clairement la différence avec la procédure du coût uniforme.
+\subsection{Définitions générales}
+Les différentes façons de représenter nos problèmes repose majoritairement sur des modèles de graphe. Vous pouvez passer à la section suivante si vous possédez déjà des connaissances de base de théorie des graphes sinon nous décrivons brièvement les notions importantes ici:\\
 
-\subsubsection{Algorithmes best-first spécialisés}
-Pour explorer un minimum de sommets possibles dans un graphe à la recherche d'un chemin optimal, un algorithme de recherche doit constamment faire les choix les plus informés possibles pour décider du prochain prochain nœud à explorer.
+{\setlength{\parindent}{0cm}\textbf{Graphe:}}
 
-L'algorithme \textit{best-first search} n'est que la patron d'une stratégie à appliquer et nécessite d'être plus amplement définie pour être implémenté concrètement.
-Il ne spécifie pas comment la fonction heuristique $f$ est calculé ni d'où les informations pour décider quel est le meilleur choix possible proviennent ou même comment elles se propagent sur le graphe pourtant se sont les éléments indispensables à une recherche efficace. \\
-
-{\setlength{\parindent}{0cm}\textbf{A*:}}
-
-L'algorithme \textit{A*} est un algorithme de type \textit{best first} et est aussi une extension de l'algorithme de Dijkstra\cite{dijkstra} un des plus populaires pour résoudre le problème du plus court chemin. 
-
-L'algorithme A* définie\cite{description-a*} sa fonction d'évaluation comme suivant: 
+Un graphe est composée d'un ensemble de \textbf{nœuds} ou \textbf{sommets} reliés par des \textbf{arcs} ou \textbf{arêtes} pouvant être associées à des valeurs (par exemple la distance entre deux sommets) ou bien être dirigé (donnant la direction, on va d'un nœud à l'autre).
+Dans notre cas, nos graphes auront toujours un nœud de départ appelé \textbf{nœud racine}.
+L'ensemble des nœuds est le plus souvent noté $V$ et on note $E$ pour l'ensemble des arêtes du graphe. 
+Un graphe est mathématiquement représenté de cette façon: $G = (V, E)$.
+Le \textbf{degré} d'un sommet est le nombre d'arêtes de celui-ci.\\
 
 \begin{center}
-    $f(n) = g(n) + h(n)$
+    \includegraphics[scale=0.6]{../ressources/images/example_graph.png}
+    \captionof{figure}{Représentation d'un graphe à 7 sommets et 7 arêtes avec un chemin dessiné en bleu entre le sommet A et le sommet H: \{A, D, F,G, H\}.}
 \end{center}
 
-où $g(n)$ est le coût d'un chemin optimal du sommet racine $s$ vers le sommet $n$ et où $h(n)$ est le coût d'un chemin optimal du sommet $n$ vers le sommet $a$, un éventuel nœud objectif.\\    
+{\setlength{\parindent}{0cm}\textbf{Arbre:}}
 
-%TODO Compléter les informations sur A* et donner un exemple où il est utile
+Un arbre est un graphe non orienté dans lequel chaque nœud (sauf le nœud racine) n'a qu'un seul parent. 
+On désigne comme \textbf{feuille} un nœud n'ayant aucun fils.
+Dans un arbre on définit la \textbf{hauteur} comme étant la longueur du chemin de la racine vers le nœud feuille le plus éloigné. On parle de \textbf{profondeur} quand il s'agit de la distance entre n'importe quel nœud feuille et le nœud racine.
+On parle d'\textbf{arbre uniforme} pour désigner un arbre fini de hauteur $n$ dont tous les nœuds qui sont inférieur en profondeur à $n$ ont le même degré et où tous les nœuds de profondeur $n$ sont des feuilles.
 
-\textbf{L'algorithme A*\cite{description-a*}}
-\begin{enumerate}
-\item Mettre le nœud racine (initial) dans la liste $NOEUDS OUVERTS$.
-\item Si la liste $NOEUDS OUVERTS$ est vide, arrêter le programme: pas de solution.
-\item Déplacer le nœud le plus prometteur de $NOEUDS OUVERTS$ c'est à dire celui pour lequel la fonction heuristique \textit{f} est minimum dans la liste $NOEUDS FERMES$. On nomme ce nœud $n$.
-\item Si $n$ est l'objectif alors retourné le chemin vers ce nœud.
-\item  Pour chacun des successeurs $n'$ de n:
-    \begin{enumerate}
-    \item Si $n'$ n'est pas dans $NOEUDS OUVERTS$ ou $NOEUDS FERMES$, estimé $h(n')$ (une estimation du coût du meilleur chemin de $n'$ vers un éventuel nœud objectif) et calculer $f(n') = g(n') + h(n')$ où $g(n') = g(n) + c(n, n')$ and $g(s) = 0$ où s est le nœud racine.
-    \item Si $n'$ est dans $NOEUDS OUVERTS$ ou  $NOEUDS FERMES$. 
-    \item Si $n'$ la condition de l'étape précédente est vraie et que $n'$ est dans la liste de $NOEUDS FERMES$ alors déplacer $n'$ dans $NOEUDS OUVERTS$.
-    \end{enumerate}
-\item Retourner à l'étape 2. 
-\end{enumerate}
+\begin{center}
+    \includegraphics[scale=0.6]{../ressources/images/example_tree.png}
+    \captionof{figure}{Un arbre uniforme de profondeur 2 à 7 sommets et 6 arêtes}
+\end{center}
 
-%TODO Conclusion + transition
+%TODO (P.34) Regarder si c'est utile, peut être le déplacer. 
+%{\setlength{\parindent}{0cm}\textbf{Recherche dans un graphe:}}
+%Dans notre cas, nous recherchons des heuristiques pour répondre à l'explosion combinatoire et donc dans le cas d'une représentation sous forme de graphe nous pouvons aussi parler d'explosion des chemins. L'ensemble des données est parfois tellement importante qu'il est impossible de modéliser l'ensemble.
+%Pour combler ces lacunes, il est possible d'utiliser des techniques de génération du graphe pas à pas.
 
-%----------------------------------------------------------------------------------------
-%	SECTION 3
-%----------------------------------------------------------------------------------------
+% Beaucoup de problèmes sont décrits comme des tâches pour chercher des propriétés sur un graphe.
+% Objectif: Trouver des méthodes efficaces pour trouver la solution rapidement dans le graphe.
 
-\section{Procédures de recherches avec apprentissage}
+Le choix d'une représentation pour encadrer un problème se fait en fonction des contraintes et des données mais ce choix n'est pas unique et peut être différent en fonction de l'approche souhaité.
 
+\subsection{ET-OU graphe}
+Le graphe \textit{ET-OU} (ou graphe de réduction de problème) est une modélisation destinée à représenter un problème comme étant la conjonction de plusieurs sous-problèmes qui peuvent être résolus indépendamment.
+Cette représentation est principalement utilisée lorsqu'il s'agit de trouver une stratégie de recherche efficace, c'est par exemple le cas si l'on souhaite résoudre le problème de la pièce contrefaite:
 
-\subsection{Définitions}
+Nous avons douze pièces de monnaie et parmi elles se trouve une pièce contrefaite, c'est à dire qui est soit plus légère ou plus lourde que les autres. L'objectif est de déterminer une stratégie pour identifier en au plus trois pesées (avec une balance) quelle est la pièce contrefaite. Il s'agit donc de sélectionner une suite d'actions de ce qui doit être pesé en premier pour avoir une chance d'identifier la pièce contrefaite.
+Bien entendu, ce problème peut être résolu en énumérant la totalité des solutions possibles mais l'objectif ici est d'utiliser une heuristique pour identifier une stratégie qui permette de résoudre ce problème en un minimum de pesée (action).
 
-\subsection{Monte Carlo Tree Search}
-%TODO
-Heuristique pour trouver des décisions optimales dans un arbre de décision.
-%TODO Idéalement il faudrait trouver une bonne définition à référencer dans le mémoire.
+Pour résoudre ce problème, il faut décider du nombre de pièces à comparer à chaque pesée. On peut par exemple décider de peser les pièces une à une, deux à deux, trois à trois, et ainsi de suite. Intuitivement, on sait que si à la première action l'on compare un sous-ensemble de pièces restreint en prenant seulement deux pièces, l'approche sera plus hasardeuse puisqu'à la prochaine action, le sous-ensemble restant risque d'être trop important pour identifier une pièce contrefaite. 
+Par contre, si nous pesons deux pièces au hasard en premier, il est possible d'obtenir le résultât en une seule pesée si l'une des deux est soit plus légère ou plus lourde.
 
-%Algorithme:
-Un arbre est construit de manière incrémental et asynchrone. Pour chaque itération de l'algorithme, une politique est utilisée pour trouver le noeud le plus important de l'arbre actuel.
-La politique d'arbre essaie d'équilibrer entre l'exploration de l'arbre (regarder dans les zones qui n'ont pas été essayées) et l'exploitation (regarder dans les zones qui ont l'air prometteuses).
+Dans ce problème, nous ne sommes pas que confronté au choix de la prochaine action à entreprendre mais aussi aux conséquences de celle-ci qui affecteront inévitablement les prochaines décisions et délimiterons le prochain sous-ensemble.
 
-Depuis un nœud une simulation est lancée et l'arbre se met à jour en fonction du résultât. Cela implique l'apparition d'un nœud correspondant à l'action entreprise par l'algorithme.
+Pour cela nous utilisons donc le graphe de réduction de problème où les nœuds représentent les sous problèmes et les arcs les conséquences de l'action entreprise sur ce sous-problème. L'avantage de ce type de modélisation est qu'il permet de découper le problème initial en sous-problèmes indépendants grâce à une technique appelée « diviser pour régner ».\\
 
-Les mouvements sont effectués pendant la simulation selon une politique d'arbre pré-défini par défaut qui dans le plus simple des cas consiste à effectuer des mouvements aléatoires uniforme.
+{\setlength{\parindent}{0cm}\textbf{Arêtes ET:}}
 
-MCTS n'a besoin que de l'état terminal de la simulation précédente pour effectuer la suivante. Il n'utilise pas les états intermédiaires.
-L'avantage est que cela réduit grandement les connaissances nécessaires à l'exécution de la méthode.
+Mène à des sous-problèmes indépendants qui devront tous être résolus pour résoudre le problème associé au nœud père. Cet arc représente les changements dans la situations du problème.\\
 
-Même si l'algorithme est efficace sur une grande variété de problème, le vrai bénéfice d'utiliser MCTS est lorsqu'il est adapté au domaine du problème.
+{\setlength{\parindent}{0cm}\textbf{Arêtes OU:}}
 
-Méthode Monte-Carlo:
-%(Différent de MCTS)
-Évaluation de la récompense: 
+Mène à des sous-problèmes alternatifs, dont l'un devra être résolu pour résoudre le problème associé au nœud père. Cet arc représente les différentes réactions possible après un tel changement.
 
-$Q(s, a) = 1 / N(s, a)$ ... % (P.2)
+\begin{center}
+    \includegraphics[scale=0.8]{../ressources/images/ET_OU_arcs.png}
+    \captionof{figure}{Respectivement les arcs ET et OU du graphe de réduction de problème.}
+\end{center}
 
-\subsubsection{Définitions et intérêt}
-%TODO
+Nous pouvons donc modéliser notre problème sous forme de graphe où chaque décision prise depuis le nœud racine forme une solution possible résultant de la première action entreprise. Une solution n'est pas donc qu'un chemin dans le graphe, mais un sous-graphe de notre modèle commençant au nœud racine. La figure 1.5 donne un exemple d'une solution possible où l'action de comparer 2 pièces de monnaies est prise en premier.
 
-\subsubsection{Famille d'algorithmes}
-%TODO
-Deux concepts fondamentaux:
+\begin{center}
+    \includegraphics[scale=0.8]{../ressources/images/counterfeit_problem_and_or_graph.png}
+    \captionof{figure}{Problème de la pièce contrefaite représenté avec un ET-OU graphe\cite{judea-pearl-heuristics}}
+\end{center}
 
-- La valeur réelle d'une action peut être approchée en utilisant une simulation aléatoire.
+%TODO Conclure + transition
 
-- Ces valeurs peuvent être utilisées pour ajuster la politique vers une stratégie du meilleur d'abord (Best-First).
+\subsection{Représentation d'état}
+Une représentation d'état consiste essentiellement en un ensemble de nœuds représentant chacun les états possibles du problème. Les arêtes entre les nœuds représentent les actions possibles d'un état à un autre. 
+Chaque représentation d'état prend la forme d'un graphe ou d'un arbre.
 
-L'algorithme construit progressivement un arbre de décision guidé par les résultâts des explorations précédentes.
-L'arbre est utilisé pour estimer les valeurs associées à chaque mouvement.
+Une représentation sous forme d'espaces états sera plutôt utilisé pour modéliser un problème de satisfaction de contraintes ou de recherche de chemin.
+Si la solution peut être exprimée comme une séquence d'actions inconditionnelles ou comme un seul objet avec un ensemble de caractéristiques nous avons un problème de plus court chemin ou de satisfaction de contraintes qui est donc modélisable comme ceci.
 
-Algorithme: 
+Avant de représenter notre problème, il faut préalablement définir un ensemble de facteurs:
+\begin{itemize}
+\item Quel est l'objectif à atteindre ?
+\item Quels sont les actions possibles ?
+\item Quels informations doivent être représentées dans la description des états ?
+\end{itemize}
 
-Basique: Construction itérative d'un arbre de recherche jusqu'à ce qu'un critère prédéfini soit atteint. Souvent une limite de de calcul comme le temps d'exécution, ou la saturation de la mémoire.
-%TODO (P.6 Fig 2. Schéma de l'algorithme, surement à mettre dans le mémoire.
+Par exemple on peut souhaiter rechercher des erreurs dans un programme. Pour cela, nous pouvons modéliser chaque nœud comme étant un état du programme issu des différentes conditions de branchement où les valeurs concrètes en mémoire seraient remplacées par des valeurs symboliques. Il s'agit alors de parcourir le graphe, pour identifier d'éventuelles valeurs pour lesquelles le programme n'aurait pas le comportement souhaité.
 
-1. Sélection: depuis le noeud racine, une politique est appliquée pour sélectionner les noeuds pour atteindre le noeud le plus important à étendre (noeud non visité et non terminal).
+\begin{center}
+    \includegraphics[scale=0.6]{../ressources/images/state_space_graph.png}
+    \captionof{figure}{Représentation sous forme d'état de l'exécution symbolique d'un programme}
+\end{center}
 
-2. Expansion: Un ou plusieurs noeuds son ajoutés pour étendre l'arbre (choix en fonction des actions disponibles).
-
-3. Simulation: une simulation est appliquée depuis le nouveau noeud en fonction d'une politique par défaut pour produire un résultât.
-
-4. Backpropagation: Le résultât de la simulation est remotée à travers les noeuds sélectionnés pour arriver au noeud ajouté pour mettre à jour ses statistiques.
-
-Deux politiques: 
-
-- La politique de l'arbre: sélectionner ou créer un noeud feuille depuis les noeuds déjà parcourus/ajoutés.
-
-- La politique par défaut: estimer la valeur d'un état non terminal (noeud ajouté) pour produire une estimation de sa valeur.
-
-%TODO Variation UCTS
-
-\subsubsection{Applications}
-
-%TODO Montrer les cas d'applications les plus populaires comme pour le jeu de GO.
-
-%TODO Montrer d'autres cas d'applications
-%Des applications pour des problèmes du plus court chemin (problème du voyageur). Il est efficace pour le problème du voyageur canadien où certain des chemins peuvent être bloqués avec une certaine probabilité (utilisation d'une variante UCT).
-
-%\subsection{Théorie de la décision}
-%TODO
-%Elle combine les théories probabilistiques avec des théories utilitaires (heuristiques) pour offrir une approche formelle pour la prise de décision dans l'incertain.
-
-%Processus de décision Markovien: Modélise de manière séquentielle des problèmes de décision dans un environnement entièrement observable.
-%Les décisions sont modélisées comme un ensemble d'état, action dans lequel chacun des prochains états est évalués grâce à une distribution de probabilité en fonction de l'état courant et de l'action entreprise.
-%Une politique est une correspondance entre états et actions en spécifiant quel action doit être entreprise depuis chaque état.
-%L'objectif et de déterminer la politique qui permette de maximiser la récompose.
-%La fonction de transition évalue la probabilité depuis l'état s et l'action a de se retrouver dans l'état s' (les états sont incertains).
-
-
-%Processus de décision Markovien partiellement  observable (POMDP):
-%Contrairement à l'approche MDP, l'oracle n'a qu'une information partielle de l'état courant.
-
-%\subsection{Les autres procédures}
+%TODO (P.34) Définir toutes les notions pour l'explorations des noeuds
+%Noeud étendu: Génération de tous les successeurs d'un noeud parant (mais pas les successeurs des successeurs je crois).
+%Noeud exploré: Noeud visité
+%Noeud généré: Génération d'un noeud successeur à partir de sont parant.
