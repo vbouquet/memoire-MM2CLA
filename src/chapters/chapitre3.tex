@@ -6,10 +6,10 @@
 \label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter2} 
 
 Nous avons définie la notion d'heuristique de recherche, présenté quelques problèmes types rencontrés en y appliquant des heuristiques simples et intuitives ainsi que des contraintes rencontrées lorsque les données à parcourir sont trop importantes et développé différentes méthodes pour modéliser nos problèmes. 
-Ce chapitre présente quelques algorithmes et méthodes connus pour parcourir et rechercher des propriétés dans nos graphe (modèle).
-Ces algorithmes définissent des stratégies ou politiques de recherche déterminant l'ordre dans lequel les nœuds du graphe seront parcourus afin d'obtenir la solution solution souhaitée ou une solution proche dans le cas d'heuristique.
+Ce chapitre présente quelques algorithmes et méthodes connus pour parcourir et rechercher des propriétés dans nos graphes (modèles).
+Ces algorithmes définissent des stratégies ou politiques de recherche déterminant l'ordre dans lequel les nœuds du graphe seront parcourus afin d'obtenir la solution souhaitée ou une solution proche dans le cas d'heuristique.
 
-Dans un premier temps nous présentons les procédures simples avec les algorithmes de parcours de graphe les plus populaires puis nous continuerons sur les recherches avec apprentissage.
+Dans un premier temps nous présentons les procédures simples avec les algorithmes de parcours de graphe les plus populaires puis nous continuerons sur les recherches avec apprentissage par renforcement.
 
 
 %----------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ Ce type de parcours assure de trouver la solution, puisqu'en pire cas toutes les
 %Variante backtracking
 {\setlength{\parindent}{0cm}\textbf{backtracking:}}
 
-Le \textit{backtracking} (ou retour sur trace) est une variante du parcours en profondeur qui permet de revenir en arrière à chaque action afin de minimiser le nombre de sommets du graphe à parcourir quand on se retrouve dans certaines situations qui ne correspondent pas à l'objectif recherché (propriétés d'un nœud non conforme).
+Le \textit{backtracking} (ou retour sur trace) est une variante du parcours en profondeur qui permet de revenir en arrière à chaque action afin de minimiser le nombre de sommets du graphe à parcourir quand on se retrouve dans certaines situations qui ne correspondent pas à l'objectif recherché (propriétés d'un nœud non conformes).
 
 %TODO
 % C'est une version du parcours en profondeur qui applique la politique de dernier-entrée-premier-sortie (LIFO) pour la génération des nœuds au lieu de l'expansion.
@@ -57,7 +57,7 @@ A chaque nœud, seulement un successeur est parcouru sauf si il ne remplit pas u
     \captionof{figure}{Ordre dans lequel les sommets sont visités avec un parcours en profondeur (gauche) et sa variante (droite): le backtracking.}
 \end{center}
 
-Les problèmes d'optimisation ou de semi-optimisation tire parti de ce type de parcours. Si l'objectif est de trouver le coût minimal alors cette stratégie est efficace puisqu'elle permet de parcourir le graphe tout en maintenant le coût à tout instant t et ceci en priorisant les sommets les plus proches de la racine.
+Les problèmes d'optimisation ou de semi-optimisation tire parti de ce type de parcours. Si l'objectif est de trouver le coût minimal alors cette stratégie est efficace puisqu'elle permet de parcourir le graphe tout en maintenant le coût à tout instant $t$ et ceci en priorisant les sommets les plus proches de la racine.
 
 \subsubsection{Parcours en largeur (BFS)}
 Contrairement au parcours en profondeur, le parcours en largeur donne la priorité au nœuds des premiers niveaux du graphe, c'est à dire aux sommets les plus proches de la racine qui seront parcourus en premier. Elle s'applique plus facilement aux arbres puisque la notion de niveau est naturellement défini, contrairement aux autres types de graphe ou il faudra définir ce qu'on entend par largeur pour orienter le sens du parcours.
@@ -108,14 +108,14 @@ La promesse, c'est à dire l'estimation de la qualité d'un nœud est estimé gr
 %TODO Définir clairement la différence avec la procédure du coût uniforme.
 
 \subsubsection{Algorithmes best-first spécialisés}
-Pour explorer un minimum de sommets possibles dans un graphe à la recherche d'un chemin optimal, un algorithme de recherche doit constamment faire les choix les plus informés possibles pour décider du prochain prochain nœud à explorer.
+Pour explorer un minimum de sommets dans un graphe à la recherche d'un chemin optimal, un algorithme de recherche doit constamment faire les choix les plus informés possibles pour décider du prochain nœud à explorer.
 
 L'algorithme \textit{best-first search} n'est que la patron d'une stratégie à appliquer et nécessite d'être plus amplement définie pour être implémenté concrètement.
 Il ne spécifie pas comment la fonction heuristique $f$ est calculé ni d'où les informations pour décider quel est le meilleur choix possible proviennent ou même comment elles se propagent sur le graphe pourtant se sont les éléments indispensables à une recherche efficace. \\
 
 {\setlength{\parindent}{0cm}\textbf{A*:}}
 
-L'algorithme \textit{A*} est un algorithme de type \textit{best first} et est aussi une extension de l'algorithme de Dijkstra\cite{dijkstra} un des plus populaires pour résoudre le problème du plus court chemin. 
+L'algorithme \textit{A*} est un algorithme de type \textit{best first} et est aussi une extension de l'algorithme de Dijkstra\cite{dijkstra}, un des plus populaires pour résoudre le problème du plus court chemin. 
 
 L'algorithme A* définie\cite{description-a*} sa fonction d'évaluation comme suivant: 
 
@@ -158,7 +158,8 @@ Appliquée à certaines méthodes systématiques elle permet d'exécuter des tâ
 
 \subsubsection*{Définitions}
 \textit{Monte Carlo Tree Search} (MCTS) est avant tout une méthode pour la résolution pratique de jeux, son application permet de décider des prochaines actions (optimales) à jouer à partir du résultât de simulation faites sur des parties fictives et des actions effectuées par l'adversaire.
-Le processus du MCTS est le suivant: un arbre est construit de manière incrémental et asynchrone et pour chaque itération de l'algorithme, une politique est utilisée pour déterminer quel est le prochain nœud à parcourir depuis l'état actuel. Cette politique est appelée, politique de l'arbre et son rôle est d'équilibrer l'exploration de nouveaux nœuds (parcourir de nouveaux nœuds) et l'exploitation des nœuds déjà parcouru pour maximiser les informations récoltées jusqu'à alors. Puis une simulation est effectuée depuis le dernier nœud sélectionné pour évaluer sa distance avec l'objectif cherché (a t-on des chances d'atteindre l'objectif et en combien de coup pouvons nous l'atteindre ?). Ensuite, grâce au résultât de cette évaluation, tous les nœuds parcourus jusqu'à alors pour atteindre le nœud actuellement sélectionné sont mis à jour pour tenir compte du résultât de la simulation. Les nœuds parcourus contiennent donc des statistiques qui permettent d'évaluer leur potentiel.
+Le processus du MCTS est le suivant: un arbre est construit de manière incrémental et asynchrone et pour chaque itération de l'algorithme, une politique est utilisée pour déterminer quel est le prochain nœud à parcourir depuis l'état actuel. Cette politique est appelée politique de l'arbre et son rôle est d'équilibrer l'exploration de nouveaux nœuds et l'exploitation des nœuds déjà parcourus pour maximiser les informations récoltées jusqu'alors. Puis une simulation est effectuée depuis le dernier nœud sélectionné pour évaluer sa distance avec l'objectif cherché (a t-on des chances d'atteindre l'objectif et en combien de coup pouvons nous l'atteindre ?). Ensuite, grâce au résultât de cette évaluation, tous les nœuds parcourus jusqu'à maintenant pour atteindre le nœud actuellement sélectionné sont mis à jour pour tenir compte du résultât de la simulation. Les nœuds parcourus contiennent donc des statistiques qui permettent d'évaluer leur potentiel.
+\textit{MCTS} appartient à la famille des méthodes d'apprentissage par renforcement puisque les répétitions des itérations successives permettront à l'algorithme d'affiner ses connaissances du problème.
 
 \begin{center}
     \includegraphics[scale=0.5]{../ressources/images/MCTS-example-iteration.png}
@@ -166,12 +167,10 @@ Le processus du MCTS est le suivant: un arbre est construit de manière incréme
     \label{example-mcts-iteration}
 \end{center}
 
-Les performances de MCTS dépendent donc du nombre de simulations produites puisqu'elles permettent à la recherche de s'orienter automatiquement vers les coup les plus prometteurs en fonction des données récoltées lors des simulations. MCTS appartient à la famille des méthodes d'apprentissage par renforcement puisque les répétitions des itérations successives permettront à l'algorithme d'affiner ses connaissances du problème.
-Même si l'algorithme de base du MCTS s'est prouvé intéressant et efficace, le vrai bénéfice d'utiliser de MCTS est atteint lorsque l'algorithme est adapté au problème donné. Les variantes du MCTS sont donc tout aussi intéressantes et il est important d'adapter le comportement général de MCTS face à chaque situation.
-
-
 \subsection*{Limitations}
-Il faut être en mesure de simuler les résultats possibles depuis un nœud. Il faut donc être capable de connaître les actions qui peuvent être entreprises depuis le contexte actuel et c'est pour cette raison que cette méthode a eu un tel succès pour la résolution pratique de jeux. De plus, cette simulation fait l'objet de nombreuses recherche puisqu'elle 
+Les performances du \textit{MCTS} dépendent donc du nombre de simulations produites puisqu'elles permettent à la recherche de s'orienter automatiquement vers les actions les plus prometteuses en fonction des données récoltées lors des simulations précédentes.
+Même si l'algorithme de base du \textit{MCTS} s'est prouvé intéressant et efficace, le vrai bénéfice d'utiliser \textit{MCTS} est atteint lorsque l'algorithme est adapté au problème donné. Les variantes du \textit{MCTS} sont donc tout aussi intéressantes et il est important d'adapter le comportement général de \textit{MCTS} face à chaque situation.
+De plus, pour effectuer les simulations il faut en mesure de simuler les résultats possibles depuis un nœud quelconque de l'arbre formant les actions possibles et leurs conséquences. Il faut donc être capable de connaître les actions qui peuvent être entreprises depuis le contexte actuel et c'est pour cette raison que cette méthode a eu un tel succès pour la résolution pratique de jeux.
 
 
 %Un des avantages de MCTS est que sa fonction d'évaluation n'a pas besoin d'être définie, elle est ajustée dynamiquement à partir du résultât des évaluations.
